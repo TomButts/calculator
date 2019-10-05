@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Calculator extends Model
 {
     protected $fillable = [
-        'current', 'previous', 'operand',
+        'current', 'previous', 'operand', 'memory', 'operandActive'
     ];
 }

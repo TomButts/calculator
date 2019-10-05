@@ -11,16 +11,10 @@
     </head>
     <body>
       <div>
-        <div class="container">
+        <div class="container app">
           <div class="row justify-content-center mt-5">
             <div class="col-auto">
-              <div class="calculator-box">
-                  <form action="">
-                    
-                    @if ($calculator)
-                      <input type="hidden" name="calculator" value="{{ $calculator }}" />
-                    @endif
-
+              <div class="calculator-box">                    
                     <table class="calculator">
                       <tbody>
                         <tr>
@@ -35,27 +29,27 @@
                           <td><input type="button" class="button" value="%"></td>
                         </tr>
                         <tr>
-                          <td><input type="button" class="button" value="1"></td>
-                          <td><input type="button" class="button" value="2"></td>
-                          <td><input type="button" class="button" value="3"></td>
-                          <td><input type="button" class="button" value="+"></td>
+                          <td><a href="/calculator/append/1"><input type="button" class="button" value="1"></a></td>
+                          <td><a href="/calculator/append/2"><input type="button" class="button" value="2"></a></td>
+                          <td><a href="/calculator/append/3"><input type="button" class="button" value="3"></a></td>
+                          <td><a href="/calculator/operand/add"><input type="button" class="button" value="+"></a></td>
                         </tr>
                         <tr>
-                          <td><input type="button" class="button" value="4"></td>
-                          <td><input type="button" class="button" value="5"></td>
-                          <td><input type="button" class="button" value="6"></td>
+                          <td><a href="/calculator/append/4"><input type="button" class="button" value="4"></a></td>
+                          <td><a href="/calculator/append/5"><input type="button" class="button" value="5"></a></td>
+                          <td><a href="/calculator/append/6"><input type="button" class="button" value="6"></a></td>
                           <td><input type="button" class="button" value="-"></td>
                         </tr>
                         <tr>
-                          <td><input type="button" class="button" value="7"></td>
-                          <td><input type="button" class="button" value="8"></td>
-                          <td><input type="button" class="button" value="9"></td>
+                          <td><a href="/calculator/append/7"><input type="button" class="button" value="7"></a></td>
+                          <td><a href="/calculator/append/8"><input type="button" class="button" value="8"></a></td>
+                          <td><a href="/calculator/append/9"><input type="button" class="button" value="9"></a></td>
                           <td><input type="button" class="button" value="/"></td>
                         </tr>
                         <tr>
-                          <td><button class="button">C</button></td>
+                          <td><a href="/calculator/clear/"><button class="button">C</button></a></td>
                           <td><input type="button" class="button" value="0"></td>
-                          <td><input type="button" class="button" value="="></td>
+                          <td><a href="/calculator/equal/"><input type="button" class="button" value="="></a></td>
                           <td><input type="button" class="button" value="*"></td>
                         </tr>
                     </tbody>

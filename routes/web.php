@@ -19,7 +19,16 @@ Route::get('/', function () {
 
 Route::group(['middleware' => 'web'], function () {
     Route::prefix('calculator')->group(function () {
+        
         Route::get('/',  'CalculatorController@index');
+
+        Route::get('/append/{value}',  'CalculatorController@append');
+        
+        Route::get('/operand/{value}',  'CalculatorController@operand');
+
+        Route::get('/equal',  'CalculatorController@equal');
+
+        Route::get('/clear',  'CalculatorController@clear');
 
         // Route::get('{button}', function ($current) {
         //     return view('calculator');

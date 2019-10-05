@@ -15,9 +15,11 @@ class CreateCalculatorsTable extends Migration
     {
         Schema::create('calculators', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('current');
-            $table->string('previous');
-            $table->string('operand');
+            $table->string('current')->nullable();
+            $table->string('previous')->nullable();
+            $table->string('operand')->nullable();
+            $table->string('operandActive')->boolean()->default(false);
+            $table->string('memory')->nullable();
             $table->timestamps();
         });
     }
