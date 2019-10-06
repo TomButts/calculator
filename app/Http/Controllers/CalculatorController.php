@@ -22,9 +22,9 @@ class CalculatorController extends Controller
 
         $calculator = Calculator::find($request->session()->get('calculator'));
 
-        // if (!$calculator) {
-        //     $request->session()->forget('calculator');
-        // }
+        if (!$calculator) {
+            $request->session()->forget('calculator');
+        }
 
         return view('calculator', [ 'current' => $calculator->current ]);
     }
@@ -81,12 +81,21 @@ class CalculatorController extends Controller
     public function equal(Request $request)
     {
         $calculator = Calculator::find($request->session()->get('calculator'));
-
+                
         switch ($calculator->operand) {
             case 'add':
                 $current = (float) $calculator->previous + (float) $calculator->current;
                 break;
-            
+            case 'minus':
+                $current = (float) $calculator->previous - (float) $calculator->current;
+                break;
+            case 'multiply':
+                $current = (float) $calculator->previous * (float) $calculator->current;
+                break;
+            case 'divide':
+                $current = (float) $calculator->previous / (float) $calculator->current;
+                break;
+
             default:
                 return redirect('calculator');
                 break;
@@ -97,6 +106,62 @@ class CalculatorController extends Controller
             'previous' => '',
             'operand' => '',
             'operandActive' => false
+        ]);
+
+        return redirect('calculator');
+    }
+
+    public function updateCurrent(Request $request, $operation)
+    {
+        $calculator = Calculator::find($request->session()->get('calculator'));
+
+        $current = $calculator->current;
+
+        switch ($operation) {
+            case 'percent':
+                $current = (float) $calculator->current / 100;
+                break;
+            case 'sign':
+                if (substr($current, 0, 1) === '-') {
+                    $current = ltrim($current, '-');
+                } else {
+                    $current = '-' . $current;
+                }
+                break;
+            case 'point':
+                if (strpos($current, '.') === false) {
+                    $current .= '.';
+                }
+                break;
+            
+            default:
+                return redirect('calculator');
+                break;
+        }
+
+        $calculator->update([ 'current' => $current ]);
+
+        return redirect('calculator');
+    }
+
+    public function save(Request $request)
+    {
+        $calculator = Calculator::find($request->session()->get('calculator'));
+
+        $memory = $calculator->memory;
+        $current  = $calculator->current;
+
+        if ($memory == '') {
+            $memory = $current;
+            $current = '';
+        } else {
+            $current = $memory;
+            $memory = '';
+        }
+
+        $calculator->update([
+            'memory' => $memory,
+            'current' => $current,
         ]);
 
         return redirect('calculator');

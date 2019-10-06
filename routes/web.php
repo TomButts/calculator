@@ -19,31 +19,18 @@ Route::get('/', function () {
 
 Route::group(['middleware' => 'web'], function () {
     Route::prefix('calculator')->group(function () {
-        
         Route::get('/',  'CalculatorController@index');
 
-        Route::get('/append/{value}',  'CalculatorController@append');
+        Route::get('append/{value}',  'CalculatorController@append');
         
-        Route::get('/operand/{value}',  'CalculatorController@operand');
+        Route::get('operand/{value}',  'CalculatorController@operand');
 
-        Route::get('/equal',  'CalculatorController@equal');
+        Route::get('updateCurrent/{operation}',  'CalculatorController@updateCurrent');
 
-        Route::get('/clear',  'CalculatorController@clear');
+        Route::get('equal',  'CalculatorController@equal');
 
-        // Route::get('{button}', function ($current) {
-        //     return view('calculator');
-        // });
+        Route::get('clear',  'CalculatorController@clear');
 
-        // Route::get('{current}/{operand}', function ($current, $operand) {
-        //     return json_encode([$current, $operand]);
-        // });
-
-        // Route::get('{current}/{operand}/{previous}', function ($current, $operand, $previous) {
-        //     return json_encode([$current, $operand, $previous]);
-        // });
-
-        // Route::post('append', function () {
-        //     // All numbers go to append
-        // });
+        Route::get('save',  'CalculatorController@save');
     });
 });
