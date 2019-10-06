@@ -53,10 +53,12 @@ class CalculatorController extends Controller
     {
         $calculator = Calculator::find($request->session()->get('calculator'));
 
-        $previous = $calculator->current;
+        if ($calculator->current && $calculator->previous && !$calculator->operandActive) {
+            return redirect('calculator/equal')->with('nextOperation', $value);
+        }
 
         $calculator->update([
-            'previous' => $previous,
+            'previous' => $calculator->current,
             'operand' => $value,
             'operandActive' => true,
         ]);
@@ -79,7 +81,11 @@ class CalculatorController extends Controller
     }
 
     public function equal(Request $request)
-    {
+    {        
+        if (!$nextOperation = $request->session()->get('nextOperation')) {
+            $nextOperation = '';
+        }
+
         $calculator = Calculator::find($request->session()->get('calculator'));
                 
         switch ($calculator->operand) {
@@ -93,9 +99,12 @@ class CalculatorController extends Controller
                 $current = (float) $calculator->previous * (float) $calculator->current;
                 break;
             case 'divide':
+                if (!$calculator->previous || !$calculator->current) {
+                    $current = 0;
+                }
+
                 $current = (float) $calculator->previous / (float) $calculator->current;
                 break;
-
             default:
                 return redirect('calculator');
                 break;
@@ -103,9 +112,9 @@ class CalculatorController extends Controller
 
         $calculator->update([
             'current' => $current,
-            'previous' => '',
-            'operand' => '',
-            'operandActive' => false
+            'previous' => ($nextOperation !== '') ? $current : '',
+            'operand' => $nextOperation,
+            'operandActive' => ($nextOperation !== '') ? true : false
         ]);
 
         return redirect('calculator');

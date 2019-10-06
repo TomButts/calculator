@@ -1813,6 +1813,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     divide: function divide() {
       this.operand = function (previous, current) {
+        if (previous == 0 || current == 0) {
+          return 0;
+        }
+
         return previous / current;
       };
 
@@ -37398,7 +37402,7 @@ var render = function() {
               attrs: { type: "button", value: "*" },
               on: {
                 click: function($event) {
-                  return _vm.mulitply()
+                  return _vm.multiply()
                 }
               }
             })

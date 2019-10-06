@@ -35,7 +35,7 @@
                     <td><button @click="clear()" class="button">C</button></td>
                     <td><input type="button" @click="append('0')" class="button" value="0"></td>
                     <td><input type="button" class="button" value="=" @click="equal()"></td>
-                    <td><input type="button" class="button" value="*" @click="mulitply()"></td>
+                    <td><input type="button" class="button" value="*" @click="multiply()"></td>
                 </tr>
             </tbody>
         </table>
@@ -111,7 +111,13 @@
                 this.operandActive()
             },
             divide: function () {
-                this.operand = (previous, current) => previous / current
+                this.operand = (previous, current) => {
+                    if (previous == 0 || current == 0) {
+                        return 0
+                    }
+
+                    return previous / current
+                }
                 this.operandActive()
             },
             operandActive: function () {
