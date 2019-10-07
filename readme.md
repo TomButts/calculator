@@ -1,71 +1,75 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Calculator
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+This calculator app is comprised of two instances of a calculator. The more advanced calculator is built using browser side code. This is intended to bring a better calculator experience to the majority of users with modern browsers. This calculator aims to mimic the functionality of the iOS built in calculator application.
 
-## About Laravel
+There is also a slightly less advanced calculator built using no javascript that should work on any device or browser.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Getting Started
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This project was developed in the Homestead development environment that is recommended to use with laravel. I recommend at least having PHP 7+, MySql and Node configured.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Installation
 
-## Learning Laravel
+Browser based calculator will require compilation.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```
+npm install
+npm run dev
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost you and your team's skills by digging into our comprehensive video library.
+For PHP calculator.
 
-## Laravel Sponsors
+```
+php artisan migrate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Instructions
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
+To access the browser calculator go to the root url. For the PHP calculator click the link or append '/calculator' to your base url.
 
-## Contributing
+The 'M' button will save the current number to memory when pressed once then apply the saved number when pressed again. It simply toggles between saving and outputting an number.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Main Files
 
-## Security Vulnerabilities
++ resources/js/components/Calculator.vue
++ app/Http/Controllers/CalculatorController.php
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Extra features
 
-## License
+The browser based calculator allows you to repeatedly apply the last operation by continuing to press equals. 
 
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+After applying a repeat operation you can append a new number and the last operation will still be saved. 
+
+The repeat operation is only reset by clearing the calculator or applying another operation.
+
+## Reasoning
+
+The question asked for use of PHP when answering this question. However the amount of data that needs to be persisted is minimal. Virtual calculators tend to be used quickly and then discarded.
+
+A JS implementation makes more sense for this use case because of its fast nature. If a user has the ability to use JS why not provide the whole solution in JS for simplicity and speed.
+
+However not everyone can use javascript so a more broadly accessible solution is also important. This implementation is less usable as the page needs to be reloaded every button press. It has the advance of accessibility
+
+## Limitations
+
++ Time - I had limited time this weekend so have only been able to deliver a minimum viable answer.
+
++ Requirements - The requirements were vague and questions did not yeild a response.
+
+## Future Work
+
+Given more time I would apply the following developments in this order:
+
+1. Bring PHP calculator functionality in line with JS calculator.
+
+2. Develop cron job to clear database of old calculator instances after values have not been updated in a certain time period.
+
+3. Refactor and apply tests.
+
+4. Detect old IE versions or JS disabled browsers and automatically show /calculator.
+
+## Built With
+
+* [Laravel](https://laravel.com/) - The web framework used
+* [Vue js](https://vuejs.org/) - Javascript library
+
