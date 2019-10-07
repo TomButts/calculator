@@ -1746,6 +1746,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       previous: '',
       current: '',
+      repeat: false,
+      temp: '',
       memory: null,
       operand: null,
       operandSet: false
@@ -1765,6 +1767,8 @@ __webpack_require__.r(__webpack_exports__);
       this.previous = '';
       this.current = '';
       this.operand = null, this.operandSet = false;
+      this.repeat = false;
+      this.temp = '';
     },
     append: function append(number) {
       if (this.operandSet) {
@@ -1773,6 +1777,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.current = "".concat(this.current).concat(number);
+
+      if (!this.repeat) {
+        this.temp = this.current;
+      }
     },
     point: function point() {
       if (this.current.indexOf('.') === -1) {
@@ -1780,8 +1788,32 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     equal: function equal() {
-      this.current = "".concat(this.operand(parseFloat(this.previous), parseFloat(this.current)));
-      this.previous = '';
+      var nextOperand = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (!this.operand || this.current == '' && this.previous == '') {
+        // Cant do equation without numbers or operation
+        return;
+      } // equals pressed
+
+
+      if (nextOperand == 'equal' && (this.repeat || this.current && this.previous == '' && this.operand)) {
+        // apply the saved operation again
+        this.current = "".concat(this.operand(parseFloat(this.current), parseFloat(this.temp)));
+        this.operandSet = true;
+      } else if (nextOperand == 'equal' && !this.repeat) {
+        // first equals pressed
+        this.current = "".concat(this.operand(parseFloat(this.previous), parseFloat(this.current))); // put previous in temp to repeat
+
+        this.repeat = true;
+        this.previous = '';
+      } else if (nextOperand) {
+        // operation button pressed
+        this.current = "".concat(this.operand(parseFloat(this.previous), parseFloat(this.current)));
+        this.previous = ''; // operation button pressed
+
+        this.operandSet = false;
+        this.operator(nextOperand);
+      }
     },
     sign: function sign() {
       // If minus, slice to remove minus, else prepend minus
@@ -1790,35 +1822,50 @@ __webpack_require__.r(__webpack_exports__);
     percent: function percent() {
       this.current = "".concat(parseFloat(this.current) / 100);
     },
-    add: function add() {
-      this.operand = function (previous, current) {
-        return previous + current;
-      };
+    operator: function operator(operand) {
+      var carry = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-      this.operandActive();
-    },
-    minus: function minus() {
-      this.operand = function (previous, current) {
-        return previous - current;
-      };
+      if (this.current && this.previous && !this.operandSet) {
+        this.equal(operand);
+        return;
+      }
 
-      this.operandActive();
-    },
-    multiply: function multiply() {
-      this.operand = function (previous, current) {
-        return previous * current;
-      };
+      switch (operand) {
+        case 'add':
+          this.operand = function (previous, current) {
+            return previous + current;
+          };
 
-      this.operandActive();
-    },
-    divide: function divide() {
-      this.operand = function (previous, current) {
-        if (previous == 0 || current == 0) {
-          return 0;
-        }
+          break;
 
-        return previous / current;
-      };
+        case 'minus':
+          this.operand = function (previous, current) {
+            return previous - current;
+          };
+
+          break;
+
+        case 'divide':
+          this.operand = function (previous, current) {
+            if (previous == 0 || current == 0) {
+              return 0;
+            }
+
+            return previous / current;
+          };
+
+          break;
+
+        case 'multiply':
+          this.operand = function (previous, current) {
+            return previous * current;
+          };
+
+          break;
+
+        default:
+          break;
+      }
 
       this.operandActive();
     },
@@ -1826,7 +1873,9 @@ __webpack_require__.r(__webpack_exports__);
       // Set flag
       this.operandSet = true; // Move current number to previous variable
 
-      this.previous = this.current;
+      this.previous = this.current; // If an operand is pressed repeat de-activated
+
+      this.repeat = false;
     }
   }
 });
@@ -37249,7 +37298,7 @@ var render = function() {
               attrs: { type: "button", value: "+" },
               on: {
                 click: function($event) {
-                  return _vm.add()
+                  return _vm.operator("add")
                 }
               }
             })
@@ -37299,7 +37348,7 @@ var render = function() {
               attrs: { type: "button", value: "-" },
               on: {
                 click: function($event) {
-                  return _vm.minus()
+                  return _vm.operator("minus")
                 }
               }
             })
@@ -37349,7 +37398,7 @@ var render = function() {
               attrs: { type: "button", value: "/" },
               on: {
                 click: function($event) {
-                  return _vm.divide()
+                  return _vm.operator("divide")
                 }
               }
             })
@@ -37390,7 +37439,7 @@ var render = function() {
               attrs: { type: "button", value: "=" },
               on: {
                 click: function($event) {
-                  return _vm.equal()
+                  return _vm.equal("equal")
                 }
               }
             })
@@ -37402,7 +37451,7 @@ var render = function() {
               attrs: { type: "button", value: "*" },
               on: {
                 click: function($event) {
-                  return _vm.multiply()
+                  return _vm.operator("multiply")
                 }
               }
             })
